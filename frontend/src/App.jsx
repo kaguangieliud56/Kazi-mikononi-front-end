@@ -1,24 +1,32 @@
-
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/common/Navbar.jsx';  
-import Home from './pages/Home/Home.jsx';             
-import Login from './pages/Login/Login.jsx';  
-import Register from './pages/Login/register.jsx';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home/Home';
+import Login from './pages/Login/Login';
+import Register from './pages/Register/Register';
+import Dashboard from './pages/Dashboard/Dashboard';
+import Jobs from './pages/Jobs/Jobs';
+import Profile from './pages/Profile/Profile';
+import Chat from './pages/Chat/Chat';
 
+import Navbar from './components/common/Navbar';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-purple-900">
-      <Navbar />
-      <main className="pt-20 pb-12 px-4">
+    <Router>
+      <div className="app-container">
+        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/jobs" element={<Jobs />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/chat" element={<Chat />} />
         </Routes>
-      </main>
-    </div>
+        {/* Footer will go here */}
+      </div>
+    </Router>
   );
 }
 

@@ -56,7 +56,7 @@ const Home = () => {
               </div>
 
               <button className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 px-12 py-6 rounded-3xl text-2xl font-black shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300">
-                Anza Kutafuta
+                Start searching
               </button>
             </div>
 
@@ -76,7 +76,7 @@ const Home = () => {
       <section className="py-32 px-8 bg-white/5 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-6xl font-black text-white text-center mb-24">
-            Huduma <span className="text-yellow-400">Zinazopatikana</span>
+            Services <span className="text-yellow-400">Zinazopatikana</span>
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
