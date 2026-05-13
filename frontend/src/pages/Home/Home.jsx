@@ -27,15 +27,14 @@ const Home = () => {
                 <span className="text-6xl">Mikononi</span>
               </h1>
               <p className="text-2xl mb-12 opacity-90 leading-relaxed max-w-lg">
-                Pata wafanyakazi bora karibu nawe. Chapisha kazi, pata bids,
-                lipa salama.
+                Find the best workers near you. Post a job, get bids, pay securely.
               </p>
 
               {/* Search */}
               <div className="relative max-w-lg mb-12">
                 <input
                   type="text"
-                  placeholder="Tafuta fundi bomba, cleaning, mwalimu..."
+                  placeholder="Search for plumbers, cleaners, tutors..."
                   className="w-full p-6 pl-14 rounded-3xl text-xl bg-white/20 backdrop-blur-xl border-2 border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-4 focus:ring-yellow-400/50 focus:border-yellow-400 transition-all"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
