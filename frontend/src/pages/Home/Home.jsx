@@ -27,15 +27,14 @@ const Home = () => {
                 <span className="text-6xl">Mikononi</span>
               </h1>
               <p className="text-2xl mb-12 opacity-90 leading-relaxed max-w-lg">
-                Pata wafanyakazi bora karibu nawe. Chapisha kazi, pata bids,
-                lipa salama.
+                Find the best workers near you. Post a job, get bids, pay securely.
               </p>
 
               {/* Search */}
               <div className="relative max-w-lg mb-12">
                 <input
                   type="text"
-                  placeholder="Tafuta fundi bomba, cleaning, mwalimu..."
+                  placeholder="Search for plumbers, cleaners, tutors..."
                   className="w-full p-6 pl-14 rounded-3xl text-xl bg-white/20 backdrop-blur-xl border-2 border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-4 focus:ring-yellow-400/50 focus:border-yellow-400 transition-all"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -57,7 +56,7 @@ const Home = () => {
               </div>
 
               <button className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 px-12 py-6 rounded-3xl text-2xl font-black shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300">
-                Anza Kutafuta
+                Start searching
               </button>
             </div>
 
@@ -77,7 +76,7 @@ const Home = () => {
       <section className="py-32 px-8 bg-white/5 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-6xl font-black text-white text-center mb-24">
-            Huduma <span className="text-yellow-400">Zinazopatikana</span>
+            Services <span className="text-yellow-400">Zinazopatikana</span>
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
