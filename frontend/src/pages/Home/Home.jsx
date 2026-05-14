@@ -1,9 +1,10 @@
-// Home Page
 import React, { useState } from "react";
-import imgHero from "../../assets/hero.png";
+import { Search, MapPin } from "lucide-react";
 
 const Home = () => {
   const [search, setSearch] = useState("");
+  const [location, setLocation] = useState("");
+  
   //Each service has icon, title, subtitle (like database rows)
   const services = [
     { icon: "🔧", title: "Fundi Bomba", subtitle: "Kurekebisha mabomba" },
@@ -14,83 +15,65 @@ const Home = () => {
   ];
 
   return (
-    <div>
+    <div className="bg-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/50 to-transparent" />
-        <div className="relative max-w-7xl mx-auto px-8 py-32">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left Text */}
-            <div className="text-white">
-              <h1 className="text-7xl lg:text-8xl font-black mb-8 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 bg-clip-text text-transparent leading-tight">
-                Kazi <br />
-                <span className="text-6xl">Mikononi</span>
-              </h1>
-              <p className="text-2xl mb-12 opacity-90 leading-relaxed max-w-lg">
-                Find the best workers near you. Post a job, get bids, pay securely.
-              </p>
+      <section className="bg-blue-600 pt-24 pb-32 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="max-w-4xl">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight font-outfit">
+              Find Skilled Workers in Your Area
+            </h1>
+            <p className="text-xl md:text-2xl text-blue-100 mb-12 leading-relaxed max-w-2xl">
+              Connect with trusted professionals for plumbing, cleaning, electrical work, tutoring, and more.
+            </p>
 
-              {/* Search */}
-              <div className="relative max-w-lg mb-12">
+            {/* Search Bar */}
+            <div className="bg-white p-2 rounded-2xl flex flex-col md:flex-row items-center gap-2 shadow-2xl">
+              <div className="flex-1 w-full flex items-center bg-slate-50 rounded-xl px-4 py-4 md:py-3 border border-transparent hover:border-slate-200 transition-colors">
+                <Search className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
                 <input
                   type="text"
-                  placeholder="Search for plumbers, cleaners, tutors..."
-                  className="w-full p-6 pl-14 rounded-3xl text-xl bg-white/20 backdrop-blur-xl border-2 border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-4 focus:ring-yellow-400/50 focus:border-yellow-400 transition-all"
+                  placeholder="What service do you need?"
+                  className="bg-transparent border-none outline-none w-full text-slate-700 placeholder-slate-400 text-lg"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
-                <svg
-                  className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-white/70"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-4.35-4.35"
-                  ></path>
-                </svg>
               </div>
-
-              <button className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 px-12 py-6 rounded-3xl text-2xl font-black shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300">
-                Start searching
+              <div className="flex-1 w-full flex items-center bg-slate-50 rounded-xl px-4 py-4 md:py-3 border border-transparent hover:border-slate-200 transition-colors">
+                <MapPin className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
+                <input
+                  type="text"
+                  placeholder="Your location"
+                  className="bg-transparent border-none outline-none w-full text-slate-700 placeholder-slate-400 text-lg"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                />
+              </div>
+              <button className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 md:py-3 rounded-xl font-semibold text-lg transition-colors whitespace-nowrap shadow-md">
+                Search
               </button>
-            </div>
-
-            {/* Right Image */}
-            <div className="relative">
-              <img
-                src={imgHero}
-                alt="Hero"
-                className="w-full h-auto rounded-3xl shadow-2xl"
-              />
             </div>
           </div>
         </div>
       </section>
 
       {/* Services */}
-      <section className="py-32 px-8 bg-white/5 backdrop-blur-sm">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-slate-50">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-6xl font-black text-white text-center mb-24">
-            Services <span className="text-yellow-400">Zinazopatikana</span>
+          <h2 className="text-4xl font-bold text-slate-900 text-center mb-16 font-outfit">
+            Popular Categories
           </h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
             {services.map((service, index) => (
-              <div key={index} className="group cursor-pointer">
-                <div className="bg-white/10 backdrop-blur-xl p-12 rounded-3xl text-center hover:bg-white/20 hover:-translate-y-6 hover:shadow-2xl border-2 border-transparent hover:border-yellow-400 transition-all duration-500 h-full">
-                  <div className="text-6xl mb-8 group-hover:scale-110 transition-transform duration-300">
-                    {service.icon}
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-yellow-400 transition-colors">
-                    {service.title}
-                  </h3>
-                  <p className="text-white/70 text-lg">{service.subtitle}</p>
+              <div key={index} className="bg-white p-8 rounded-3xl text-center shadow-sm border border-slate-100 hover:shadow-xl hover:-translate-y-2 transition-all duration-300 cursor-pointer group">
+                <div className="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                  {service.icon}
                 </div>
+                <h3 className="text-lg font-bold text-slate-900 mb-2 group-hover:text-blue-600 transition-colors">
+                  {service.title}
+                </h3>
+                <p className="text-slate-500 text-sm">{service.subtitle}</p>
               </div>
             ))}
           </div>
