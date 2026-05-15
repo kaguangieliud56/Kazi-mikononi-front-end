@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Plus, MapPin, DollarSign, Calendar, Users, ChevronRight } from "lucide-react";
+import { Plus, MapPin, DollarSign, Calendar, Users, ChevronRight, Wallet, CheckCircle, Star } from "lucide-react";
 
 function Dashboard() {
   const [activeTab, setActiveTab] = useState("progress");
@@ -38,7 +38,7 @@ function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-4 sm:px-6 lg:px-8 relative">
+    <div className="min-h-screen bg-slate-50 pt-12 pb-12 px-4 sm:px-6 lg:px-8 relative font-outfit">
       {/* Subtle background styling */}
       <div className="absolute top-0 left-0 w-full h-80 bg-gradient-to-b from-blue-50/50 to-slate-50 pointer-events-none" />
 
@@ -47,13 +47,49 @@ function Dashboard() {
         {/* Header Section */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900 font-outfit">My Jobs</h1>
-            <p className="text-slate-500 mt-1">Manage your posted jobs and applications</p>
+            <h1 className="text-3xl font-bold text-slate-900">Dashboard</h1>
+            <p className="text-slate-500 mt-1">Welcome back! Here's what's happening with your account.</p>
           </div>
-          <button className="flex items-center space-x-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg shadow-blue-500/30 transform transition-all hover:-translate-y-0.5">
-            <Plus className="w-5 h-5" />
-            <span>Post a Job</span>
-          </button>
+          <div className="flex items-center gap-3">
+            <button className="flex items-center space-x-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 px-5 py-2.5 rounded-xl font-medium shadow-sm transition-colors">
+              <span>Browse Jobs</span>
+            </button>
+            <button className="flex items-center space-x-2 bg-[#2563EB] hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium shadow-sm transition-colors">
+              <Plus className="w-5 h-5" />
+              <span>Post a Job</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-10">
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 shrink-0">
+              <Wallet className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-slate-500 mb-1">Total Earnings</p>
+              <h3 className="text-2xl font-bold text-slate-900">KSh 45,000</h3>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 rounded-full bg-green-50 flex items-center justify-center text-green-600 shrink-0">
+              <CheckCircle className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-slate-500 mb-1">Completed Jobs</p>
+              <h3 className="text-2xl font-bold text-slate-900">24</h3>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition-shadow">
+            <div className="w-12 h-12 rounded-full bg-yellow-50 flex items-center justify-center text-yellow-500 shrink-0">
+              <Star className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-slate-500 mb-1">Average Rating</p>
+              <h3 className="text-2xl font-bold text-slate-900">4.8 <span className="text-sm font-normal text-slate-400">/ 5</span></h3>
+            </div>
+          </div>
         </div>
 
         {/* Tabs */}
