@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Plus, MapPin, DollarSign, Calendar, Users, ChevronRight, Wallet, CheckCircle, Star } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import jobService from "../../services/jobService";
 
 function Dashboard() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("progress");
 
   const tabs = [
@@ -10,7 +13,7 @@ function Dashboard() {
     { id: "completed", label: "Completed", count: 0 },
   ];
 
-  const mockJobs = [
+  const MOCK_JOBS = [
     {
       id: 1,
       title: "Fix Leaking Kitchen Sink",
@@ -37,6 +40,24 @@ function Dashboard() {
     }
   ];
 
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMyJobs = async () => {
+      try {
+        const data = await jobService.getMyJobs();
+        setJobs(Array.isArray(data) ? data : data.jobs || []);
+      } catch (err) {
+        console.warn("Backend not reachable. Falling back to dummy data.");
+        setJobs(MOCK_JOBS);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchMyJobs();
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-50 pt-12 pb-12 px-4 sm:px-6 lg:px-8 relative font-outfit">
       {/* Subtle background styling */}
@@ -51,10 +72,16 @@ function Dashboard() {
             <p className="text-slate-500 mt-1">Welcome back! Here's what's happening with your account.</p>
           </div>
           <div className="flex items-center gap-3">
-            <button className="flex items-center space-x-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 px-5 py-2.5 rounded-xl font-medium shadow-sm transition-colors">
+            <button 
+              onClick={() => navigate('/jobs')}
+              className="flex items-center space-x-2 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 px-5 py-2.5 rounded-xl font-medium shadow-sm transition-colors"
+            >
               <span>Browse Jobs</span>
             </button>
-            <button className="flex items-center space-x-2 bg-[#2563EB] hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium shadow-sm transition-colors">
+            <button 
+              onClick={() => navigate('/post-job')}
+              className="flex items-center space-x-2 bg-[#2563EB] hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium shadow-sm transition-colors"
+            >
               <Plus className="w-5 h-5" />
               <span>Post a Job</span>
             </button>
@@ -125,58 +152,66 @@ function Dashboard() {
 
         {/* Jobs List */}
         <div className="space-y-6">
-          {mockJobs.map((job) => (
-            <div 
-              key={job.id} 
-              className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100 hover:shadow-md transition-shadow group cursor-pointer"
-            >
-              <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
-                <div>
-                  <div className="flex items-center flex-wrap gap-3 mb-2">
-                    <h2 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
-                      {job.title}
-                    </h2>
-                    <span className={`px-2.5 py-1 text-xs font-semibold rounded-full border ${job.statusColor}`}>
-                      {job.status}
-                    </span>
-                  </div>
-                  <p className="text-slate-600 leading-relaxed max-w-3xl">
-                    {job.description}
-                  </p>
-                </div>
-                <button className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors shrink-0">
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-              </div>
-
-              {/* Meta Info */}
-              <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-sm text-slate-500 mb-6">
-                <div className="flex items-center text-slate-700 font-medium">
-                  <MapPin className="w-4 h-4 mr-2 text-slate-400" />
-                  {job.location}
-                </div>
-                <div className="flex items-center text-slate-700 font-medium">
-                  <DollarSign className="w-4 h-4 mr-1 text-slate-400" />
-                  {job.budget}
-                </div>
-                <div className="flex items-center">
-                  <Calendar className="w-4 h-4 mr-2 text-slate-400" />
-                  Posted {job.date}
-                </div>
-                <div className="flex items-center">
-                  <Users className="w-4 h-4 mr-2 text-slate-400" />
-                  {job.applicants} applicants
-                </div>
-              </div>
-
-              {/* Tags */}
-              <div className="flex items-center">
-                <span className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 transition-colors">
-                  {job.category}
-                </span>
-              </div>
+          {loading ? (
+            <div className="flex justify-center items-center py-10">
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
             </div>
-          ))}
+          ) : jobs.length === 0 ? (
+            <div className="text-center py-10 text-slate-500">You haven't posted any jobs yet.</div>
+          ) : (
+            jobs.map((job) => (
+              <div 
+                key={job.id || job._id} 
+                className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100 hover:shadow-md transition-shadow group cursor-pointer"
+              >
+                <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-4">
+                  <div>
+                    <div className="flex items-center flex-wrap gap-3 mb-2">
+                      <h2 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                        {job.title}
+                      </h2>
+                      <span className={`px-2.5 py-1 text-xs font-semibold rounded-full border ${job.statusColor || 'bg-slate-100 text-slate-600'}`}>
+                        {job.status || 'Open'}
+                      </span>
+                    </div>
+                    <p className="text-slate-600 leading-relaxed max-w-3xl">
+                      {job.description}
+                    </p>
+                  </div>
+                  <button className="hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-slate-50 text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors shrink-0">
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Meta Info */}
+                <div className="flex flex-wrap items-center gap-y-3 gap-x-6 text-sm text-slate-500 mb-6">
+                  <div className="flex items-center text-slate-700 font-medium">
+                    <MapPin className="w-4 h-4 mr-2 text-slate-400" />
+                    {job.location || 'Remote'}
+                  </div>
+                  <div className="flex items-center text-slate-700 font-medium">
+                    <DollarSign className="w-4 h-4 mr-1 text-slate-400" />
+                    {job.budget || 'Negotiable'}
+                  </div>
+                  <div className="flex items-center">
+                    <Calendar className="w-4 h-4 mr-2 text-slate-400" />
+                    Posted {job.date || new Date().toLocaleDateString()}
+                  </div>
+                  <div className="flex items-center">
+                    <Users className="w-4 h-4 mr-2 text-slate-400" />
+                    {job.applicants || 0} applicants
+                  </div>
+                </div>
+
+                {/* Tags */}
+                <div className="flex items-center">
+                  <span className="inline-flex items-center px-3 py-1 rounded-lg text-sm font-medium bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200 transition-colors">
+                    {job.category || 'General'}
+                  </span>
+                </div>
+              </div>
+            ))
+          )}
         </div>
 
       </div>

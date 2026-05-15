@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search, MapPin, Star, ShieldCheck, Wrench, Brush, Zap, BookOpen } from 'lucide-react';
+import userService from '../../services/userService';
 
 const DUMMY_WORKERS = [
   { id: 1, name: "David Kimani", title: "Professional Plumber", rating: 4.8, reviews: 124, rate: "500", verified: true, image: "https://i.pravatar.cc/150?img=11" },
@@ -20,6 +21,23 @@ const CATEGORIES = [
 
 const Workers = () => {
   const [activeCategory, setActiveCategory] = useState("All");
+  const [workers, setWorkers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchWorkers = async () => {
+      try {
+        const data = await userService.getWorkers();
+        setWorkers(Array.isArray(data) ? data : data.users || []);
+      } catch (err) {
+        console.warn("Backend not reachable. Falling back to dummy data.");
+        setWorkers(DUMMY_WORKERS);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchWorkers();
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#F9FAFB] font-outfit py-12 px-4 sm:px-6 lg:px-8">
@@ -40,7 +58,10 @@ const Workers = () => {
               placeholder="Search by name, skill, or service..."
             />
             <div className="absolute inset-y-2 right-2">
-              <button className="bg-[#2563EB] hover:bg-blue-700 text-white rounded-full px-6 py-2 font-semibold transition-colors">
+              <button 
+                onClick={() => alert("Search functionality coming soon!")}
+                className="bg-[#2563EB] hover:bg-blue-700 text-white rounded-full px-6 py-2 font-semibold transition-colors"
+              >
                 Search
               </button>
             </div>
@@ -67,41 +88,52 @@ const Workers = () => {
 
         {/* Workers Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {DUMMY_WORKERS.map((worker) => (
-            <div key={worker.id} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow group">
-              <div className="relative h-48 bg-slate-200 overflow-hidden">
-                <img src={worker.image} alt={worker.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                {worker.verified && (
-                  <div className="absolute top-3 right-3 bg-[#10B981] text-white text-xs font-bold px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
-                    <ShieldCheck className="w-3 h-3" /> Verified
-                  </div>
-                )}
-              </div>
-              <div className="p-5">
-                <div className="flex justify-between items-start mb-2">
-                  <div>
-                    <h3 className="text-lg font-bold text-slate-900">{worker.name}</h3>
-                    <p className="text-sm text-slate-500 font-medium">{worker.title}</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center gap-1 mb-4">
-                  <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                  <span className="text-sm font-bold text-slate-700">{worker.rating}</span>
-                  <span className="text-sm text-slate-400">({worker.reviews} reviews)</span>
-                </div>
-                
-                <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
-                  <div className="text-slate-900 font-bold">
-                    KSh {worker.rate}<span className="text-slate-400 text-sm font-normal">/hour</span>
-                  </div>
-                  <button className="text-[#2563EB] font-bold text-sm hover:text-blue-700 transition-colors">
-                    View Profile
-                  </button>
-                </div>
-              </div>
+          {loading ? (
+            <div className="col-span-full flex justify-center items-center py-20">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
-          ))}
+          ) : workers.length === 0 ? (
+            <div className="col-span-full text-center py-10 text-slate-500">No workers found.</div>
+          ) : (
+            workers.map((worker) => (
+              <div key={worker.id || worker._id} className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden hover:shadow-md transition-shadow group">
+                <div className="relative h-48 bg-slate-200 overflow-hidden">
+                  <img src={worker.image || worker.avatar || `https://ui-avatars.com/api/?name=${worker.name || 'User'}`} alt={worker.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                  {(worker.verified !== false) && (
+                    <div className="absolute top-3 right-3 bg-[#10B981] text-white text-xs font-bold px-2 py-1 rounded-md flex items-center gap-1 shadow-sm">
+                      <ShieldCheck className="w-3 h-3" /> Verified
+                    </div>
+                  )}
+                </div>
+                <div className="p-5">
+                  <div className="flex justify-between items-start mb-2">
+                    <div>
+                      <h3 className="text-lg font-bold text-slate-900">{worker.name}</h3>
+                      <p className="text-sm text-slate-500 font-medium">{worker.title || worker.skills?.[0] || 'Professional'}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-1 mb-4">
+                    <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                    <span className="text-sm font-bold text-slate-700">{worker.rating || '4.5'}</span>
+                    <span className="text-sm text-slate-400">({worker.reviews || 0} reviews)</span>
+                  </div>
+                  
+                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
+                    <div className="text-slate-900 font-bold">
+                      KSh {worker.rate || worker.hourlyRate || '500'}<span className="text-slate-400 text-sm font-normal">/hour</span>
+                    </div>
+                    <button 
+                      onClick={() => alert(`Navigating to ${worker.name}'s profile...`)}
+                      className="text-[#2563EB] font-bold text-sm hover:text-blue-700 transition-colors"
+                    >
+                      View Profile
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
         </div>
         
       </div>

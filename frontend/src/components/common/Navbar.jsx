@@ -69,7 +69,10 @@ const Navbar = () => {
 
           {/* Actions */}
           <div className="flex items-center space-x-6">
-            <button className="hidden sm:flex items-center space-x-1 bg-[#00c978] hover:bg-[#00b16a] text-white px-5 py-2 rounded-full font-semibold text-sm transition-colors">
+            <button 
+              onClick={() => navigate('/post-job')}
+              className="hidden sm:flex items-center space-x-1 bg-[#00c978] hover:bg-[#00b16a] text-white px-5 py-2 rounded-full font-semibold text-sm transition-colors"
+            >
               <Plus className="w-4 h-4" />
               <span>Post Job</span>
             </button>

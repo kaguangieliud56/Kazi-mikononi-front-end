@@ -8,6 +8,7 @@ import Jobs from './pages/Jobs/Jobs';
 import Workers from './pages/Workers/Workers';
 import Profile from './pages/Profile/Profile';
 import Chat from './pages/Chat/Chat';
+import PostJob from './pages/PostJob/PostJob';
 
 import Navbar from './components/common/Navbar';
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/jobs" element={<Jobs />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/post-job" element={<PostJob />} />
         </Routes>
         {/* Footer will go here */}
       </div>

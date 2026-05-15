@@ -33,7 +33,10 @@ const Jobs = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <button className="bg-[#2563EB] hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors shrink-0">
+          <button 
+            onClick={() => alert("Search functionality coming soon!")}
+            className="bg-[#2563EB] hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors shrink-0"
+          >
             Search
           </button>
         </div>
@@ -82,6 +85,7 @@ const Jobs = () => {
                   </div>
                 </div>
                 <button 
+                  onClick={() => alert("Successfully applied for this job!")}
                   className={`px-8 py-3 rounded-xl font-bold transition-colors w-full sm:w-auto ${
                     job.status === 'Open' 
                       ? 'bg-[#2563EB] hover:bg-blue-700 text-white shadow-sm' 

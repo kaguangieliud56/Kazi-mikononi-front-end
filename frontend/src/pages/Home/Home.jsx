@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Search, MapPin, Wrench, Brush, Zap, BookOpen, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [location, setLocation] = useState("");
   
@@ -21,7 +23,7 @@ const Home = () => {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="/assets/hero-bg.jpg"
+            src="/assets/hero-bg.jpg" 
             alt="Hero Background" 
             className="w-full h-full object-cover opacity-60"
           />
@@ -58,7 +60,10 @@ const Home = () => {
                 onChange={(e) => setLocation(e.target.value)}
               />
             </div>
-            <button className="w-full md:w-auto bg-[#0a4fd4] hover:bg-blue-700 text-white px-10 py-3.5 rounded-full font-semibold text-base transition-colors whitespace-nowrap mt-2 md:mt-0">
+            <button 
+              onClick={() => navigate('/workers')}
+              className="w-full md:w-auto bg-[#0a4fd4] hover:bg-blue-700 text-white px-10 py-3.5 rounded-full font-semibold text-base transition-colors whitespace-nowrap mt-2 md:mt-0"
+            >
               Search
             </button>
           </div>
@@ -77,7 +82,10 @@ const Home = () => {
                 Trusted professionals ready to start today
               </p>
             </div>
-            <button className="text-[#0a4fd4] font-bold hover:text-blue-800 transition-colors flex items-center gap-1 text-sm">
+            <button 
+              onClick={() => navigate('/workers')}
+              className="text-[#0a4fd4] font-bold hover:text-blue-800 transition-colors flex items-center gap-1 text-sm"
+            >
               See all services
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -87,6 +95,7 @@ const Home = () => {
             {services.map((service, index) => (
               <div 
                 key={index} 
+                onClick={() => navigate('/workers')}
                 className="bg-white p-6 md:p-8 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-slate-100 hover:shadow-lg transition-all duration-300 cursor-pointer"
               >
                 <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center mb-6">
@@ -116,12 +125,14 @@ const Home = () => {
               Our vetting process ensures that only the most reliable and skilled professionals join our platform. Hire with confidence and get the job done right.
             </p>
             <div className="flex flex-wrap gap-4">
-              <button className="bg-[#0a4fd4] hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors">
+              <button 
+                onClick={() => navigate('/post-job')}
+                className="bg-[#0a4fd4] hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+              >
                 Post a Job Now
               </button>
-              <button className="bg-white hover:bg-slate-50 text-[#0a4fd4] border border-[#0a4fd4] px-8 py-3 rounded-lg font-semibold transition-colors">
-                How it works
-              </button>
+              
+             
             </div>
           </div>
 
