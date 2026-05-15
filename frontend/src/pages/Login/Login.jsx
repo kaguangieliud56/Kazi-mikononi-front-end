@@ -1,19 +1,22 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Mail, Lock, LogIn, ArrowRight } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { updateUserInContext } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     
-    // Simulate login
+    // Simulate login for UI demonstration
     setTimeout(() => {
+      updateUserInContext({ name: "Demo User", email: email, role: "client" });
       setLoading(false);
       navigate("/dashboard");
     }, 1500);
