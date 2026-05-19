@@ -1,6 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap');
 
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   /* your variables */
@@ -28,8 +30,4 @@
 
 .animate-fade-in {
   animation: fade-in 0.8s ease-out forwards;
-}
-
-@theme {
-  --font-outfit: "Outfit", sans-serif;
 }
