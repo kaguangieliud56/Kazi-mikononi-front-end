@@ -1,101 +1,198 @@
-// Home Page
 import React, { useState } from "react";
-import imgHero from "../../assets/hero.png";
+import { Search, MapPin, Wrench, Brush, Zap, BookOpen, ChevronRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [search, setSearch] = useState("");
-  //Each service has icon, title, subtitle (like database rows)
+  const [location, setLocation] = useState("");
+  
+  //Each service has icon, title, subtitle
   const services = [
-    { icon: "🔧", title: "Fundi Bomba", subtitle: "Kurekebisha mabomba" },
-    { icon: "🧹", title: "House Cleaning", subtitle: "Kusafisha nyumba" },
-    { icon: "📚", title: "Tutoring", subtitle: "Kufundisha watoto" },
-    { icon: "⚡", title: "Fundi Umeme", subtitle: "Kurekebisha umeme" },
-    { icon: "🔨", title: "Fundi Mbao", subtitle: "Kufanya mbao" },
+    { icon: <Wrench className="w-8 h-8 text-blue-600" />, title: "Plumbing", subtitle: "120+ Pros available" },
+    { icon: <Brush className="w-8 h-8 text-blue-600" />, title: "Cleaning", subtitle: "250+ Pros available" },
+    { icon: <Zap className="w-8 h-8 text-blue-600" />, title: "Electrician", subtitle: "85+ Pros available" },
+    { icon: <BookOpen className="w-8 h-8 text-blue-600" />, title: "Tutoring", subtitle: "150+ Pros available" },
   ];
 
   return (
-    <div>
+    <div className="font-outfit bg-white selection:bg-blue-100 selection:text-blue-600 flex flex-col min-h-screen">
+      
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/50 to-transparent" />
-        <div className="relative max-w-7xl mx-auto px-8 py-32">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left Text */}
-            <div className="text-white">
-              <h1 className="text-7xl lg:text-8xl font-black mb-8 bg-gradient-to-r from-yellow-400 via-orange-400 to-red-500 bg-clip-text text-transparent leading-tight">
-                Kazi <br />
-                <span className="text-6xl">Mikononi</span>
-              </h1>
-              <p className="text-2xl mb-12 opacity-90 leading-relaxed max-w-lg">
-                Find the best workers near you. Post a job, get bids, pay securely.
-              </p>
+      <section className="relative h-[600px] flex items-center justify-center bg-black">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0 z-0">
+          <img 
+            src="/assets/hero-bg.jpg" 
+            alt="Hero Background" 
+            className="w-full h-full object-cover opacity-60"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60"></div>
+        </div>
+        
+        <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-16">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 tracking-tight">
+            Find Skilled Workers in Your Area
+          </h1>
+          <p className="text-lg md:text-xl text-slate-200 mb-10 max-w-3xl mx-auto font-light">
+            Connect with trusted professionals for plumbing, cleaning, electrical work, tutoring, and more.
+          </p>
 
-              {/* Search */}
-              <div className="relative max-w-lg mb-12">
-                <input
-                  type="text"
-                  placeholder="Search for plumbers, cleaners, tutors..."
-                  className="w-full p-6 pl-14 rounded-3xl text-xl bg-white/20 backdrop-blur-xl border-2 border-white/30 text-white placeholder-white/70 focus:outline-none focus:ring-4 focus:ring-yellow-400/50 focus:border-yellow-400 transition-all"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <svg
-                  className="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-white/70"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-4.35-4.35"
-                  ></path>
-                </svg>
-              </div>
-
-              <button className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 px-12 py-6 rounded-3xl text-2xl font-black shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 transition-all duration-300">
-                Anza Kutafuta
-              </button>
-            </div>
-
-            {/* Right Image */}
-            <div className="relative">
-              <img
-                src={imgHero}
-                alt="Hero"
-                className="w-full h-auto rounded-3xl shadow-2xl"
+          {/* Search Bar Container */}
+          <div className="bg-white p-2 rounded-full shadow-2xl flex flex-col md:flex-row items-center max-w-4xl mx-auto border border-white/20">
+            <div className="flex-1 w-full flex items-center px-6 py-3 border-b md:border-b-0 md:border-r border-slate-200">
+              <Search className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
+              <input
+                type="text"
+                placeholder="What service do you need?"
+                className="bg-transparent border-none outline-none w-full text-slate-700 placeholder-slate-400 text-base"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
             </div>
+            <div className="flex-1 w-full flex items-center px-6 py-3">
+              <MapPin className="w-5 h-5 text-slate-400 mr-3 shrink-0" />
+              <input
+                type="text"
+                placeholder="Your location"
+                className="bg-transparent border-none outline-none w-full text-slate-700 placeholder-slate-400 text-base"
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+              />
+            </div>
+            <button 
+              onClick={() => navigate('/workers')}
+              className="w-full md:w-auto bg-[#0a4fd4] hover:bg-blue-700 text-white px-10 py-3.5 rounded-full font-semibold text-base transition-colors whitespace-nowrap mt-2 md:mt-0"
+            >
+              Search
+            </button>
           </div>
         </div>
       </section>
 
-      {/* Services */}
-      <section className="py-32 px-8 bg-white/5 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-6xl font-black text-white text-center mb-24">
-            Huduma <span className="text-yellow-400">Zinazopatikana</span>
-          </h2>
+      {/* Categories Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-[#fafbff]">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-10 gap-4">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold text-[#1e293b] mb-1">
+                Popular Categories
+              </h2>
+              <p className="text-slate-500 text-sm font-medium">
+                Trusted professionals ready to start today
+              </p>
+            </div>
+            <button 
+              onClick={() => navigate('/workers')}
+              className="text-[#0a4fd4] font-bold hover:text-blue-800 transition-colors flex items-center gap-1 text-sm"
+            >
+              See all services
+              <ChevronRight className="w-4 h-4" />
+            </button>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map((service, index) => (
-              <div key={index} className="group cursor-pointer">
-                <div className="bg-white/10 backdrop-blur-xl p-12 rounded-3xl text-center hover:bg-white/20 hover:-translate-y-6 hover:shadow-2xl border-2 border-transparent hover:border-yellow-400 transition-all duration-500 h-full">
-                  <div className="text-6xl mb-8 group-hover:scale-110 transition-transform duration-300">
-                    {service.icon}
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-yellow-400 transition-colors">
-                    {service.title}
-                  </h3>
-                  <p className="text-white/70 text-lg">{service.subtitle}</p>
+              <div 
+                key={index} 
+                onClick={() => navigate('/workers')}
+                className="bg-white p-6 md:p-8 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.03)] border border-slate-100 hover:shadow-lg transition-all duration-300 cursor-pointer"
+              >
+                <div className="w-12 h-12 bg-white rounded-xl shadow-sm border border-slate-100 flex items-center justify-center mb-6">
+                  {service.icon}
                 </div>
+                <h3 className="text-lg font-bold text-[#1e293b] mb-1">
+                  {service.title}
+                </h3>
+                <p className="text-slate-400 text-xs font-medium">{service.subtitle}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Feature Cards Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-[#f1f5f9]">
+        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          {/* Employers Card */}
+          <div className="lg:col-span-2 bg-white rounded-3xl p-10 md:p-12 shadow-sm border border-slate-100 flex flex-col justify-center">
+            <p className="text-xs font-bold tracking-wider text-[#0a4fd4] uppercase mb-4">For Employers</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#1e293b] mb-6 max-w-md">
+              Access the best local talent instantly.
+            </h2>
+            <p className="text-slate-500 mb-10 max-w-lg leading-relaxed">
+              Our vetting process ensures that only the most reliable and skilled professionals join our platform. Hire with confidence and get the job done right.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <button 
+                onClick={() => navigate('/post-job')}
+                className="bg-[#0a4fd4] hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
+              >
+                Post a Job Now
+              </button>
+              
+             
+            </div>
+          </div>
+
+          {/* Safe & Secure Card */}
+          <div className="bg-[#0a4fd4] rounded-3xl p-10 md:p-12 shadow-md text-white flex flex-col justify-center relative overflow-hidden">
+            {/* Background subtle pattern/circle */}
+            <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full translate-x-1/3 -translate-y-1/3 blur-xl"></div>
+            
+            <div className="relative z-10">
+              <div className="mb-8">
+                <svg width="40" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 22C12 22 20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M9 12L11 14L15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <h3 className="text-2xl font-bold mb-4">Safe & Secure</h3>
+              <p className="text-blue-100 text-sm leading-relaxed mb-8">
+                Every transaction and communication is encrypted and monitored for your peace of mind.
+              </p>
+              
+              <div className="h-px bg-blue-500/50 w-full mb-8"></div>
+              
+              <div className="flex items-center gap-4">
+                <div className="flex -space-x-3">
+                  {/* Dummy Avatars */}
+                  <div className="w-8 h-8 rounded-full border-2 border-[#0a4fd4] overflow-hidden bg-slate-300">
+                     <img src="https://i.pravatar.cc/150?img=11" alt="user" className="w-full h-full object-cover"/>
+                  </div>
+                  <div className="w-8 h-8 rounded-full border-2 border-[#0a4fd4] overflow-hidden bg-slate-300">
+                     <img src="https://i.pravatar.cc/150?img=12" alt="user" className="w-full h-full object-cover"/>
+                  </div>
+                  <div className="w-8 h-8 rounded-full border-2 border-[#0a4fd4] overflow-hidden bg-slate-300">
+                     <img src="https://i.pravatar.cc/150?img=13" alt="user" className="w-full h-full object-cover"/>
+                  </div>
+                </div>
+                <p className="text-sm font-medium text-blue-50">Joined by 10k+ Pros</p>
+              </div>
+            </div>
+          </div>
+          
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-white py-8 border-t border-slate-100 mt-auto">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="text-[#0a4fd4] font-bold text-xl tracking-tight">
+            Kazi Mikononi
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-slate-500 font-medium">
+            <a href="#" className="hover:text-[#0a4fd4] transition-colors">About Us</a>
+            <a href="#" className="hover:text-[#0a4fd4] transition-colors">Terms of Service</a>
+            <a href="#" className="hover:text-[#0a4fd4] transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-[#0a4fd4] transition-colors">Contact Support</a>
+          </div>
+          <div className="text-xs text-slate-400">
+            © 2024 Kazi Mikononi. All rights reserved.
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

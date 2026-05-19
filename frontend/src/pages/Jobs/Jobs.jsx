@@ -1,251 +1,106 @@
+import React, { useState } from 'react';
+import { Search, MapPin, Calendar, Users, DollarSign } from 'lucide-react';
 
-// Jobs Listings Page
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+const DUMMY_JOBS = [
+  { id: 1, title: "Weekly House Cleaning", status: "Open", location: "Westlands, Nairobi", budget: "1,500", date: "Posted 2h ago", applicants: 4, desc: "Looking for a reliable cleaner for a 3-bedroom apartment. Every Saturday morning. Must bring own cleaning supplies.", employer: "Alice N.", avatar: "https://i.pravatar.cc/150?img=1" },
+  { id: 2, title: "Fix Leaking Kitchen Sink", status: "Open", location: "Kilimani, Nairobi", budget: "2,000", date: "Posted 5h ago", applicants: 12, desc: "The pipe under my kitchen sink is leaking heavily. Need a professional plumber to fix or replace it today.", employer: "Brian O.", avatar: "https://i.pravatar.cc/150?img=15" },
+  { id: 3, title: "High School Math Tutor Needed", status: "Open", location: "Lavington, Nairobi", budget: "1,000/hr", date: "Posted 1d ago", applicants: 2, desc: "Need a tutor for my Form 3 son. Focus on Calculus and Algebra. Twice a week in the evenings.", employer: "Caroline W.", avatar: "https://i.pravatar.cc/150?img=3" },
+  { id: 4, title: "Install New Light Fixtures", status: "Closed", location: "Karen, Nairobi", budget: "3,500", date: "Posted 2d ago", applicants: 8, desc: "Need an electrician to install 4 new chandelier-style light fixtures in the living room and dining area.", employer: "David K.", avatar: "https://i.pravatar.cc/150?img=4" },
+];
 
 const Jobs = () => {
-  const [activeTab, setActiveTab] = useState("all");
-  const navigate = useNavigate();
-
-  // Mock job data
-  const jobs = [
-    {
-      id: 1,
-      title: "Fix Leaking Kitchen Sink",
-      description: "Need an experienced plumber to fix a sink in my kitchen. The leak is coming from under the basin. Water is dripping constantly and I need this fixed as soon as possible.",
-      location: "Westlands, Nairobi",
-      budget: "KSh 3,000",
-      category: "Plumbing",
-      status: "open",
-      postedBy: "James Otumo",
-      image: "🔧",
-      applicants: 5,
-      posted: "2025-05-10",
-    },
-    {
-      id: 2,
-      title: "Weekly House Cleaning",
-      description: "Looking for a reliable cleaner for weekly deep cleaning of a 2-bedroom apartment.",
-      location: "Kilimani, Nairobi",
-      budget: "KSh 4,000",
-      category: "Cleaning",
-      status: "open",
-      postedBy: "Alice Wambui",
-      image: "🧹",
-      applicants: 12,
-      posted: "2025-05-09",
-    },
-    {
-      id: 3,
-      title: "Install Ceiling Fan",
-      description: "Need an electrician to install a ceiling fan in the living room.",
-      location: "Parklands, Nairobi",
-      budget: "KSh 2,500",
-      category: "Electrical",
-      status: "in-progress",
-      postedBy: "Robert Kipngetich",
-      image: "⚡",
-      applicants: 3,
-      posted: "2025-05-08",
-    },
-    {
-      id: 4,
-      title: "Math Tutor for Form 3 Student",
-      description: "Looking for an experienced math tutor to help my daughter prepare for exams. 3 sessions per week.",
-      location: "Karen, Nairobi",
-      budget: "KSh 8,000",
-      category: "Tutoring",
-      status: "open",
-      postedBy: "Catherine Muthoni",
-      image: "📚",
-      applicants: 8,
-      posted: "2025-05-07",
-    },
-    {
-      id: 5,
-      title: "Build Custom Bookshelf",
-      description: "Need a carpenter to build a custom bookshelf for my home office. Design already prepared.",
-      location: "Lavington, Nairobi",
-      budget: "KSh 15,000",
-      category: "Carpentry",
-      status: "completed",
-      postedBy: "Michael Odhiambo",
-      image: "🔨",
-      applicants: 4,
-      posted: "2025-05-05",
-    },
-  ];
-
-  // Filter jobs based on active tab
-  const filteredJobs = jobs.filter((job) => {
-    if (activeTab === "all") return true;
-    if (activeTab === "open") return job.status === "open";
-    if (activeTab === "in-progress") return job.status === "in-progress";
-    if (activeTab === "completed") return job.status === "completed";
-    return true;
-  });
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "open":
-        return "bg-green-500/20 text-green-300 border-green-400/30";
-      case "in-progress":
-        return "bg-blue-500/20 text-blue-300 border-blue-400/30";
-      case "completed":
-        return "bg-gray-500/20 text-gray-300 border-gray-400/30";
-      default:
-        return "bg-white/20 text-white/70 border-white/30";
-    }
-  };
-
-  const getStatusLabel = (status) => {
-    switch (status) {
-      case "open":
-        return "Funguliwa";
-      case "in-progress":
-        return "Inafanywa";
-      case "completed":
-        return "Imekamilika";
-      default:
-        return status;
-    }
-  };
+  const [searchTerm, setSearchTerm] = useState("");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-purple-900 pt-32 pb-12">
-      <div className="max-w-7xl mx-auto px-8">
+    <div className="min-h-screen bg-[#F9FAFB] font-outfit py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto">
         
         {/* Header */}
-        <div className="flex items-center justify-between mb-12">
-          <div>
-            <h1 className="text-6xl font-black text-white mb-2">
-              Ajira <span className="text-yellow-400">Zinazopatikana</span>
-            </h1>
-            <p className="text-white/70 text-xl">Tembea ajira zinazopo au chapisha yako mwenyewe</p>
+        <div className="mb-10">
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-2">Available Jobs</h1>
+          <p className="text-slate-500">Browse and apply for tasks in your area.</p>
+        </div>
+
+        {/* Search & Filter */}
+        <div className="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex flex-col sm:flex-row gap-4 mb-8">
+          <div className="flex-1 relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <input 
+              type="text" 
+              placeholder="Search jobs by title or keyword..." 
+              className="w-full pl-12 pr-4 py-3 bg-slate-50 border-none rounded-xl focus:ring-2 focus:ring-[#2563EB] outline-none text-slate-700"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-          <button
-            onClick={() => navigate("/post-job")}
-            className="bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 px-8 py-4 rounded-3xl text-lg font-black shadow-2xl hover:shadow-3xl transform hover:-translate-y-1 transition-all duration-300 flex items-center space-x-2 text-gray-900"
+          <button 
+            onClick={() => alert("Search functionality coming soon!")}
+            className="bg-[#2563EB] hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-semibold transition-colors shrink-0"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
-            <span>Chapisha Kazi</span>
+            Search
           </button>
         </div>
 
-        {/* Tabs */}
-        <div className="flex space-x-4 mb-12 overflow-x-auto pb-4">
-          {[
-            { id: "all", label: "Zote Zote", count: jobs.length },
-            { id: "open", label: "Funguliwa", count: jobs.filter(j => j.status === "open").length },
-            { id: "in-progress", label: "Inafanywa", count: jobs.filter(j => j.status === "in-progress").length },
-            { id: "completed", label: "Imekamilika", count: jobs.filter(j => j.status === "completed").length },
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-8 py-3 rounded-full font-bold text-lg whitespace-nowrap transition-all duration-300 border-2 ${
-                activeTab === tab.id
-                  ? "bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 border-yellow-400"
-                  : "bg-white/10 text-white border-white/30 hover:border-white/50"
-              }`}
-            >
-              {tab.label} ({tab.count})
-            </button>
+        {/* Jobs Feed */}
+        <div className="space-y-6">
+          {DUMMY_JOBS.map((job) => (
+            <div key={job.id} className="bg-white rounded-2xl p-6 md:p-8 shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+              
+              {/* Card Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                <h2 className="text-xl md:text-2xl font-bold text-slate-900">{job.title}</h2>
+                <span className={`px-3 py-1 rounded-full text-xs font-bold w-fit ${job.status === 'Open' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'}`}>
+                  {job.status}
+                </span>
+              </div>
+
+              {/* Info Row */}
+              <div className="flex flex-wrap items-center gap-y-2 gap-x-6 mb-6">
+                <div className="flex items-center text-slate-500 text-sm font-medium">
+                  <MapPin className="w-4 h-4 mr-1.5" /> {job.location}
+                </div>
+                <div className="flex items-center text-slate-500 text-sm font-medium">
+                  <DollarSign className="w-4 h-4 mr-1.5" /> KSh {job.budget}
+                </div>
+                <div className="flex items-center text-slate-500 text-sm font-medium">
+                  <Calendar className="w-4 h-4 mr-1.5" /> {job.date}
+                </div>
+                <div className="flex items-center text-slate-500 text-sm font-medium">
+                  <Users className="w-4 h-4 mr-1.5" /> {job.applicants} Applicants
+                </div>
+              </div>
+
+              {/* Description */}
+              <p className="text-slate-600 mb-8 leading-relaxed">
+                {job.desc}
+              </p>
+
+              {/* Footer */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 border-t border-slate-100">
+                <div className="flex items-center gap-3">
+                  <img src={job.avatar} alt={job.employer} className="w-10 h-10 rounded-full object-cover" />
+                  <div>
+                    <p className="text-xs text-slate-400">Posted by</p>
+                    <p className="text-sm font-bold text-slate-900">{job.employer}</p>
+                  </div>
+                </div>
+                <button 
+                  onClick={() => alert("Successfully applied for this job!")}
+                  className={`px-8 py-3 rounded-xl font-bold transition-colors w-full sm:w-auto ${
+                    job.status === 'Open' 
+                      ? 'bg-[#2563EB] hover:bg-blue-700 text-white shadow-sm' 
+                      : 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                  }`}
+                  disabled={job.status !== 'Open'}
+                >
+                  {job.status === 'Open' ? 'Apply Now' : 'Closed'}
+                </button>
+              </div>
+
+            </div>
           ))}
         </div>
 
-        {/* Job Cards */}
-        <div className="space-y-6">
-          {filteredJobs.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-white/70 text-2xl">Hakuna ajira katika kigae hiki</p>
-            </div>
-          ) : (
-            filteredJobs.map((job) => (
-              <div
-                key={job.id}
-                className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 hover:border-yellow-400/50 hover:bg-white/15 transition-all duration-300 shadow-2xl"
-              >
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                  {/* Left: Job Info */}
-                  <div className="lg:col-span-3 space-y-4">
-                    {/* Title & Status */}
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <h3 className="text-3xl font-bold text-white mb-2">
-                          {job.title}
-                        </h3>
-                        <p className="text-white/70 text-lg leading-relaxed max-w-2xl">
-                          {job.description}
-                        </p>
-                      </div>
-                      <div className={`px-4 py-2 rounded-full border text-sm font-bold whitespace-nowrap ${getStatusColor(job.status)}`}>
-                        {getStatusLabel(job.status)}
-                      </div>
-                    </div>
-
-                    {/* Details Row */}
-                    <div className="flex flex-wrap items-center gap-6 pt-4 border-t border-white/20">
-                      {/* Location */}
-                      <div className="flex items-center space-x-2">
-                        <span className="text-2xl">📍</span>
-                        <span className="text-white/80 font-medium">{job.location}</span>
-                      </div>
-
-                      {/* Budget */}
-                      <div className="flex items-center space-x-2">
-                        <span className="text-2xl">💰</span>
-                        <span className="text-white/80 font-medium">{job.budget}</span>
-                      </div>
-
-                      {/* Category */}
-                      <div className="flex items-center space-x-2">
-                        <span className="text-2xl">{job.image}</span>
-                        <span className="text-white/80 font-medium">{job.category}</span>
-                      </div>
-
-                      {/* Posted Date */}
-                      <div className="flex items-center space-x-2 text-white/60 text-sm">
-                        <span>📅</span>
-                        <span>{job.posted}</span>
-                      </div>
-
-                      {/* Applicants */}
-                      <div className="flex items-center space-x-2 text-white/60 text-sm">
-                        <span>👥</span>
-                        <span>{job.applicants} waajiri</span>
-                      </div>
-                    </div>
-
-                    {/* Posted By */}
-                    <div className="text-white/70 text-sm pt-2">
-                      Iliyochapishwa na: <span className="font-semibold text-white">{job.postedBy}</span>
-                    </div>
-                  </div>
-
-                  {/* Right: Action */}
-                  <div className="flex flex-col justify-between items-end lg:items-start">
-                    {job.status === "open" ? (
-                      <button className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 px-8 py-4 rounded-2xl text-lg font-bold text-white shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-                        Omba Sasa
-                      </button>
-                    ) : job.status === "in-progress" ? (
-                      <button className="w-full bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 px-8 py-4 rounded-2xl text-lg font-bold text-white shadow-lg hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300">
-                        Tazama Maendeleo
-                      </button>
-                    ) : (
-                      <button className="w-full bg-white/20 border-2 border-white/30 px-8 py-4 rounded-2xl text-lg font-bold text-white/70 cursor-not-allowed">
-                        Imekamilika
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
       </div>
     </div>
   );
