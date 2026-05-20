@@ -24,20 +24,90 @@ const PostJob = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (uploading) {
+      alert("Please wait for image upload to finish");
+      return;
+    }
+
     setLoading(true);
-    
+
     try {
-      await jobService.createJob(formData);
+      const payload = {
+        ...formData,
+        contact_method: formData.contactMethod,
+        image_url: imageUrl || null,
+        budget: Number(formData.budget),
+      };
+
+      await jobService.createJob(payload);
+
       alert("Job posted successfully!");
-      navigate('/dashboard');
+      navigate("/dashboard");
     } catch (error) {
-      console.warn("Backend not reachable. Falling back to dummy success.");
-      alert("Job posted successfully! (Demo Mode)");
-      navigate('/dashboard');
+      console.error(error);
+      alert(error.response?.data?.error || "Failed to post job");
     } finally {
       setLoading(false);
     }
   };
+
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageUrl, setImageUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
+
+  const uploadImage = async (file) => {
+  const formData = new FormData();
+  formData.append("image", file);
+
+  setUploading(true);
+
+  try {
+    const response = await jobService.uploadJobImage(formData);
+    setImageUrl(response.image_url);
+    return response.image_url;
+  } catch (err) {
+    console.error("Upload failed:", err);
+    alert("Image upload failed");
+    return null;
+  } finally {
+    setUploading(false);
+  }
+};
+
+
+const handleFileChange = async (file) => {
+  if (!file) return;
+
+  // validate type
+  if (!file.type.startsWith("image/")) {
+    alert("Only image files allowed");
+    return;
+  }
+
+  // validate size (5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    alert("Image must be less than 5MB");
+    return;
+  }
+
+  setImageFile(file);
+  const preview = URL.createObjectURL(file);
+  setImagePreview(preview);
+
+  await uploadImage(file);
+};
+
+  const handleDrop = async (e) => {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  await handleFileChange(file);
+};
+
+const handleDragOver = (e) => {
+  e.preventDefault();
+};
 
   return (
     <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 font-outfit">
@@ -118,18 +188,81 @@ const PostJob = () => {
 
           {/* Photos of the Job Section */}
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8">
-            <h2 className="text-xl font-bold text-slate-900 mb-2">Photos of the Job</h2>
+            <h2 className="text-xl font-bold text-slate-900 mb-2">
+              Photos of the Job
+            </h2>
+
             <p className="text-sm text-slate-500 mb-6">
-              Upload photos to help workers understand what needs to be done. For example, show the broken sink, damaged area, or space that needs work.
+              Upload or drag & drop a photo, or paste an image URL.
             </p>
-            
-            <div className="border-2 border-dashed border-slate-300 rounded-xl p-10 flex flex-col items-center justify-center bg-slate-50/50 hover:bg-slate-50 transition-colors cursor-pointer group">
-              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm border border-slate-200 mb-4 group-hover:scale-105 transition-transform">
-                <Camera className="w-8 h-8 text-slate-400" />
+
+            {/* DROP AREA */}
+              <div
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+                onClick={() => document.getElementById("fileInput").click()}
+                className="border-2 border-dashed border-slate-300 rounded-xl p-8 flex flex-col items-center justify-center bg-slate-50 cursor-pointer hover:bg-slate-100 transition"
+              >
+                <Camera className="w-10 h-10 text-slate-400 mb-3" />
+
+                <p className="font-semibold text-slate-700">
+                  Drag & drop image here
+                </p>
+
+                <p className="text-sm text-slate-500">
+                  or click anywhere to choose file
+                </p>
+
+                {/* HIDDEN FILE INPUT (IMPORTANT) */}
+                <input
+                  id="fileInput"
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => handleFileChange(e.target.files[0])}
+                />
+
+                {/* UPLOADING STATE */}
+                {uploading && (
+                  <p className="text-blue-600 mt-2 text-sm">
+                    Uploading image...
+                  </p>
+                )}
+
+                {/* SUCCESS MESSAGE */}
+                {imageUrl && (
+                  <p className="text-green-600 text-sm mt-2 font-medium">
+                    ✓ Image uploaded successfully
+                  </p>
+                )}
               </div>
-              <p className="text-slate-700 font-semibold mb-1">Click to upload photos</p>
-              <p className="text-slate-500 text-sm">PNG, JPG or GIF (Max 5MB per image)</p>
+
+            {/* URL INPUT OPTION */}
+            <div className="mt-6">
+              <label className="text-sm font-semibold text-slate-700">
+                Or paste image URL
+              </label>
+
+              <input
+                type="text"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="https://example.com/image.jpg"
+                className="mt-2 w-full px-4 py-2 border rounded-xl bg-slate-50"
+              />
             </div>
+
+            {/* PREVIEW */}
+            {imagePreview && (
+              <div className="mt-6">
+                <p className="text-sm text-slate-600 mb-2">Preview:</p>
+                <img
+                  src={imagePreview}
+                  alt="preview"
+                  className="w-full max-h-64 object-cover rounded-xl border"
+                />
+              </div>
+            )}
           </div>
 
           {/* Location & Budget Section */}

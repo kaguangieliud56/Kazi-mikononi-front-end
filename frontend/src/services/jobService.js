@@ -1,17 +1,16 @@
-import api from './api';
+import api from "./api";
 
 const jobService = {
   /**
-   * Get a paginated, filterable list of jobs.
-   * @param {object} params - e.g. { category, location, search, page, limit }
+   * Get all jobs (filterable)
    */
   getJobs: async (params) => {
-    const response = await api.get('/jobs', { params });
+    const response = await api.get("/jobs/", { params });
     return response.data;
   },
 
   /**
-   * Get a single job by its ID.
+   * Get single job
    */
   getJobById: async (id) => {
     const response = await api.get(`/jobs/${id}`);
@@ -19,16 +18,27 @@ const jobService = {
   },
 
   /**
-   * Post a new job (client only).
-   * @param {object} jobData - { title, description, category, budget, location, deadline }
+   * Create job
    */
   createJob: async (jobData) => {
-    const response = await api.post('/jobs', jobData);
+    const payload = {
+      title: jobData.title,
+      description: jobData.description,
+      category: jobData.category,
+      budget: Number(jobData.budget),
+      location: jobData.location,
+      urgency: jobData.urgency,
+      duration: jobData.duration,
+      contact_method: jobData.contactMethod, // FIXED naming consistency
+      image_url: jobData.image_url || null,
+    };
+
+    const response = await api.post("/jobs/", payload);
     return response.data;
   },
 
   /**
-   * Update an existing job (owner only).
+   * Update job
    */
   updateJob: async (id, jobData) => {
     const response = await api.put(`/jobs/${id}`, jobData);
@@ -36,7 +46,7 @@ const jobService = {
   },
 
   /**
-   * Delete a job (owner only).
+   * Delete job
    */
   deleteJob: async (id) => {
     const response = await api.delete(`/jobs/${id}`);
@@ -44,30 +54,38 @@ const jobService = {
   },
 
   /**
-   * Apply for a job (worker only).
-   * @param {string} jobId
-   * @param {object} applicationData - { coverLetter, proposedPrice }
+   * APPLY FOR JOB (FIXED)
+   * Backend: POST /applications/<job_id>
    */
-  applyForJob: async (jobId, applicationData) => {
-    const response = await api.post(`/jobs/${jobId}/apply`, applicationData);
+  applyForJob: async (jobId, data) => {
+    const response = await api.post(`/applications/${jobId}`, data);
     return response.data;
   },
 
   /**
-   * Fetch all jobs posted by the currently authenticated user.
+   * Get jobs posted by current client
    */
   getMyJobs: async () => {
-    const response = await api.get('/jobs/mine');
+    const response = await api.get("/jobs/mine");
     return response.data;
   },
 
   /**
-   * Fetch all jobs the current worker has applied for.
+   * Get jobs worker applied for (if you add endpoint later)
+   * backend: /applications/mine
    */
   getMyApplications: async () => {
-    const response = await api.get('/jobs/applications/mine');
+    const response = await api.get("/applications/mine");
     return response.data;
   },
+  uploadJobImage: async (formData) => {
+  const response = await api.post("/jobs/upload-image", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response.data;
+},
 };
 
 export default jobService;

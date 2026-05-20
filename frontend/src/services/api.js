@@ -1,49 +1,124 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_URL =
+  import.meta.env.VITE_API_URL ||
+  "https://kazi-mikononi-back-end.onrender.com";
 
 const api = axios.create({
   baseURL: API_URL,
+
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
-  timeout: 10000, // 10 second timeout
+
+  timeout: 15000,
 });
 
-// ── Request Interceptor ───────────────────────────────────────────────────────
-// Automatically attaches the JWT from localStorage to every outgoing request.
+
+// ─────────────────────────────────────────────
+// REQUEST INTERCEPTOR
+// ─────────────────────────────────────────────
 api.interceptors.request.use(
+
   (config) => {
-    const token = localStorage.getItem('kazi_token');
+
+    const token =
+      localStorage.getItem("kazi_token");
+
+    // attach token automatically
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+
+      config.headers.Authorization =
+        `Bearer ${token}`;
     }
+
     return config;
   },
+
   (error) => Promise.reject(error)
 );
 
-// ── Response Interceptor ──────────────────────────────────────────────────────
-// Handles global error cases:
-//   401 → token expired / invalid → clear storage and redirect to /login
-//   403 → forbidden (logged but no permission)
-//   Network errors → surface a friendly message
+
+// ─────────────────────────────────────────────
+// RESPONSE INTERCEPTOR
+// ─────────────────────────────────────────────
 api.interceptors.response.use(
+
+  // SUCCESS
   (response) => response,
+
+  // ERROR
   (error) => {
+
+    console.error("API ERROR:", error);
+
+    // SERVER RESPONDED
     if (error.response) {
-      if (error.response.status === 401) {
-        localStorage.removeItem('kazi_token');
-        localStorage.removeItem('kazi_user');
-        // Only redirect if we are not already on the login page
-        if (window.location.pathname !== '/login') {
-          window.location.href = '/login';
+
+      const status =
+        error.response.status;
+
+      // TOKEN EXPIRED / INVALID
+      if (status === 401) {
+
+        console.warn(
+          "Session expired. Logging out..."
+        );
+
+        // clear auth data
+        localStorage.removeItem(
+          "kazi_token"
+        );
+
+        localStorage.removeItem(
+          "kazi_user"
+        );
+
+        // avoid redirect loop
+        if (
+          window.location.pathname !== "/login"
+        ) {
+
+          window.location.href = "/login";
         }
       }
-    } else if (error.request) {
-      // Request was made but no response received (network down / CORS)
-      error.message = 'Unable to reach the server. Please check your connection.';
+
+      // FORBIDDEN
+      if (status === 403) {
+
+        console.warn(
+          "Access forbidden."
+        );
+      }
+
+      // SERVER ERROR
+      if (status >= 500) {
+
+        error.message =
+          "Server error. Please try again later.";
+      }
     }
+
+    // REQUEST SENT BUT NO RESPONSE
+    else if (error.request) {
+
+      console.error(
+        "No response from server."
+      );
+
+      error.message =
+        "Unable to reach server. Check your internet connection.";
+    }
+
+    // OTHER ERRORS
+    else {
+
+      console.error(
+        "Unexpected error:",
+        error.message
+      );
+    }
+
     return Promise.reject(error);
   }
 );

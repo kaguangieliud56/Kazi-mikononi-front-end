@@ -1,9 +1,23 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { User, Mail, MapPin, Lock, Briefcase, UserCircle, ArrowRight } from "lucide-react";
+import { useAuth } from "../../context/AuthContext";
+import {
+  User,
+  Mail,
+  MapPin,
+  Lock,
+  Briefcase,
+  UserCircle,
+  ArrowRight,
+} from "lucide-react";
 
 const Register = () => {
-  const [accountType, setAccountType] = useState("worker"); // "worker" or "client"
+
+  const { register } = useAuth();
+  const navigate = useNavigate();
+
+  const [accountType, setAccountType] = useState("worker");
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -12,49 +26,144 @@ const Register = () => {
     confirmPassword: "",
     agreeTerms: false,
   });
+
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [serverError, setServerError] = useState("");
 
   const handleInputChange = (e) => {
+
     const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        type === "checkbox"
+          ? checked
+          : value,
+    }));
+
     if (errors[name]) {
-      setErrors({ ...errors, [name]: "" });
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }));
     }
   };
 
   const validateForm = () => {
+
     const newErrors = {};
-    if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
-    if (!formData.email.trim()) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Email is invalid";
-    if (!formData.location.trim()) newErrors.location = "Location is required";
-    if (!formData.password) newErrors.password = "Password is required";
-    else if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
-    if (!formData.confirmPassword) newErrors.confirmPassword = "Confirm your password";
-    else if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match";
-    if (!formData.agreeTerms) newErrors.agreeTerms = "You must agree to the terms";
+
+    if (!formData.fullName.trim()) {
+      newErrors.fullName =
+        "Full name is required";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email =
+        "Email is required";
+    } else if (
+      !/\S+@\S+\.\S+/.test(formData.email)
+    ) {
+      newErrors.email =
+        "Email is invalid";
+    }
+
+    if (!formData.location.trim()) {
+      newErrors.location =
+        "Location is required";
+    }
+
+    if (!formData.password) {
+      newErrors.password =
+        "Password is required";
+    } else if (
+      formData.password.length < 6
+    ) {
+      newErrors.password =
+        "Password must be at least 6 characters";
+    }
+
+    if (
+      formData.password !==
+      formData.confirmPassword
+    ) {
+      newErrors.confirmPassword =
+        "Passwords do not match";
+    }
+
+    if (!formData.agreeTerms) {
+      newErrors.agreeTerms =
+        "You must agree to the terms";
+    }
+
     return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newErrors = validateForm();
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+
+    const validationErrors = validateForm();
+
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
+
     setLoading(true);
-    setTimeout(() => {
+    setServerError("");
+
+    try {
+      const payload = {
+        full_name: formData.fullName.trim(),
+        email: formData.email.trim().toLowerCase(),
+        password: formData.password,
+        role: accountType,
+        location: formData.location.trim(),
+      };
+
+      const response = await register(payload);
+
+      console.log("REGISTER SUCCESS:", response);
+
+      // success flow
+      if (response?.token) {
+        const role = response?.user?.role;
+
+        navigate(role === "worker" ? "/profile" : "/dashboard");
+      } else {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.error("REGISTER ERROR:", error);
+
+      const backendMessage =
+        error?.response?.data?.message ||
+        error?.response?.data?.error;
+
+      // handle specific cases nicely
+      if (backendMessage?.toLowerCase().includes("email")) {
+        setErrors((prev) => ({
+          ...prev,
+          email: "This email is already registered",
+        }));
+      } else if (backendMessage?.toLowerCase().includes("password")) {
+        setErrors((prev) => ({
+          ...prev,
+          password: backendMessage,
+        }));
+      } else {
+        setServerError(backendMessage || "Registration failed. Please try again.");
+      }
+    } finally {
       setLoading(false);
-      navigate("/login");
-    }, 1500);
+    }
   };
 
+  // ─────────────────────────────────────────────
+  // UI
+  // ─────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Premium Background Elements */}
@@ -64,7 +173,7 @@ const Register = () => {
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-xl relative z-10">
-        <h2 className="mt-6 text-center text-4xl font-extrabold text-slate-900 tracking-tight font-outfit">
+        <h2 className="mt-6 text-center text-4xl font-extrabold text-slate-900">
           Create an account
         </h2>
         <p className="mt-2 text-center text-base text-slate-600">
@@ -72,12 +181,23 @@ const Register = () => {
         </p>
       </div>
 
+      {/* FORM CONTAINER SHOULD BE HERE */}
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-xl relative z-10">
+
         <div className="bg-white/80 backdrop-blur-xl py-10 px-6 shadow-2xl sm:rounded-3xl sm:px-10 border border-slate-100">
-          
-          {/* Account Type Selection */}
-          <div className="mb-8">
-            <p className="text-sm font-medium text-slate-700 mb-3">I want to:</p>
+
+          {/* SERVER ERROR */}
+          {serverError && (
+            <div className="mb-5 p-3 rounded-xl bg-red-50 border border-red-200 text-red-600 text-sm">
+              {serverError}
+            </div>
+          )}
+
+    {/* rest of form... */}
+
+            {/* Account Type Selection */}
+            <div className="mb-8">
+              <p className="text-sm font-medium text-slate-700 mb-3">I want to:</p>
             <div className="grid grid-cols-2 gap-4">
               <button
                 type="button"

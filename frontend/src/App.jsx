@@ -5,7 +5,8 @@ import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Jobs from './pages/Jobs/Jobs';
-import Workers from './pages/Workers/Workers';
+import WorkerProfile from "./pages/Workers/WorkerProfile";
+import Workers from "./pages/Workers/Workers";
 import Profile from './pages/Profile/Profile';
 import Chat from './pages/Chat/Chat';
 import PostJob from './pages/PostJob/PostJob';
@@ -27,6 +28,8 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/post-job" element={<PostJob />} />
+          <Route path="/workers" element={<Workers />} />
+          <Route path="/workers/:id" element={<WorkerProfile />} />
         </Routes>
         {/* Footer will go here */}
       </div>

@@ -30,9 +30,9 @@ const userService = {
    * Browse the worker directory with optional filters.
    * @param {object} params - { category, location, search, minRating, page, limit }
    */
-  getWorkers: async (params) => {
-    const response = await api.get('/users/workers', { params });
-    return response.data;
+  getWorkers: async () => {
+    const response = await api.get("/workers/");
+    return response.data.workers;
   },
 
   /**
@@ -57,6 +57,39 @@ const userService = {
     const response = await api.post(`/users/${workerId}/rate`, ratingData);
     return response.data;
   },
+  getProfile: async () => {
+    const response = await api.get("/workers/profile");
+    return response.data;
+  },
+
+  saveProfile: async (data) => {
+    const response = await api.post("/workers/profile", data);
+    return response.data;
+  },
+
+  getWorkers: async () => {
+    const response = await api.get("/workers/");
+    return response.data;
+  },
+
+  addSkill: async (skill) => {
+    const response = await api.post("/workers/skills", {
+      skill
+    });
+    return response.data;
+  },
+
+  removeSkill: async (skill) => {
+    const response = await api.delete("/workers/skills", {
+      data: { skill }
+    });
+    return response.data;
+  },
+
+  getSkills: async () => {
+    const response = await api.get("/workers/skills");
+    return response.data;
+  }
 };
 
 export default userService;
