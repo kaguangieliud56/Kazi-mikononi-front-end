@@ -1,18 +1,110 @@
-# React + Vite
+# Kazi Mikononi — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A local job marketplace connecting clients with skilled workers across Kenya.
+Built with React, Vite, and Tailwind CSS.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Getting Started
 
-## React Compiler
+### Prerequisites
+- Node.js v18+
+- npm
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+### Installation
 
-Note: This will impact Vite dev & build performances.
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## Expanding the ESLint configuration
+The app will run at `http://localhost:5173`
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Environment Variables
+
+Create a `.env` file inside the `frontend/` folder:
+
+```env
+VITE_API_URL=http://localhost:5000/api
+```
+
+---
+
+## 🗂️ Project Structure
+
+```
+src/
+├── components/
+│   └── common/         # Navbar, Footer, ProtectedRoute
+├── context/            # Global state (Auth, Jobs, Chat)
+├── pages/              # One folder per page/route
+├── services/           # All API calls (axios)
+└── index.css           # Tailwind + custom animations
+```
+
+---
+
+## 📄 Pages
+
+| Route | Page | Description |
+|-------|------|-------------|
+| `/` | Home | Landing page with search and categories |
+| `/login` | Login | Sign in to your account |
+| `/register` | Register | Create a worker or client account |
+| `/dashboard` | Dashboard | Overview of your jobs and stats |
+| `/jobs` | Jobs | Browse available job listings |
+| `/workers` | Workers | Find skilled professionals |
+| `/post-job` | PostJob | Create a new job listing |
+| `/profile` | Profile | Manage your worker profile |
+| `/chat` | Chat | Message other users |
+
+---
+
+## 🛠️ Tech Stack
+
+| Tool | Purpose |
+|------|---------|
+| React 19 | UI framework |
+| Vite | Dev server & build tool |
+| React Router v7 | Client-side routing |
+| Tailwind CSS v3 | Styling |
+| Axios | HTTP requests |
+| Lucide React | Icons |
+
+---
+
+## 🔐 Authentication
+
+- JWT tokens are stored in `localStorage` under the key `kazi_token`
+- Tokens are automatically attached to every API request via an Axios interceptor
+- A 401 response from the server clears the token and redirects to `/login`
+
+---
+
+## ⚠️ Current Limitations
+
+- Login and Register forms are in **demo mode** (no real API call yet)
+- Search and filter inputs are **UI-only** — logic not yet connected
+- Photo upload UI exists but **file handling not implemented**
+- `ProtectedRoute` component is built but **not yet applied** to routes
+
+---
+
+## 📦 Scripts
+
+```bash
+npm run dev       # Start development server
+npm run build     # Build for production
+npm run preview   # Preview production build
+npm run lint      # Run ESLint
+```
+
+---
+
+## 👥 Authors
+
+- **Sydney Munene**
+- **Emmanuel Kaguangi**
+
+Built as part of the Kazi Mikononi Project.
